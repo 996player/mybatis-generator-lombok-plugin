@@ -4,22 +4,28 @@ import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.Field;
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.mybatis.generator.api.dom.java.Interface;
 import org.mybatis.generator.api.dom.java.JavaElement;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
-import org.mybatis.generator.api.dom.xml.*;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.Document;
+import org.mybatis.generator.api.dom.xml.Element;
+import org.mybatis.generator.api.dom.xml.TextElement;
+import org.mybatis.generator.api.dom.xml.XmlElement;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
- *
- *  @Author: GuiRunning 郭贵荣
- *
- *  @Description: 自定义注释生成
- *
- *  @Date: 2018/7/14 0:57
- *
+ * @Author: GuiRunning 郭贵荣
+ * @Description: 自定义注释生成
+ * @Date: 2018/7/14 0:57
  */
 public class CommentPlugin extends PluginAdapter {
 
@@ -31,7 +37,32 @@ public class CommentPlugin extends PluginAdapter {
         topLevelClass.getJavaDocLines().clear();
         topLevelClass.addJavaDocLine("/**");
         topLevelClass.addJavaDocLine(" * Table: " + introspectedTable.getFullyQualifiedTable());
+        topLevelClass.addJavaDocLine(" * ");
+        topLevelClass.addJavaDocLine(" * @author geyingqi");
+        topLevelClass.addJavaDocLine(" * @date " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         topLevelClass.addJavaDocLine(" */");
+        return true;
+    }
+
+    /**
+     * 这个是mapper文件的
+     *
+     * @param topLevelClass
+     * @param introspectedTable
+     * @return
+     */
+    @Override
+    public boolean clientGenerated(Interface interfaze, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        interfaze.getJavaDocLines().clear();
+        interfaze.addJavaDocLine("/**");
+        interfaze.addJavaDocLine(" * Table: " + introspectedTable.getFullyQualifiedTable());
+        interfaze.addJavaDocLine(" * ");
+        interfaze.addJavaDocLine(" * @author geyingqi");
+        interfaze.addJavaDocLine(" * @date " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        interfaze.addJavaDocLine(" */");
+        interfaze.addImportedType(new FullyQualifiedJavaType("com.shuidihuzhu.common.datasource.DS"));
+        interfaze.addImportedType(new FullyQualifiedJavaType("com.shuidihuzhu.common.datasource.annotation.DataSource"));
+        interfaze.addAnnotation("@DataSource(DS.SD_BAO)");
         return true;
     }
 
@@ -85,20 +116,20 @@ public class CommentPlugin extends PluginAdapter {
             Iterator<Element> it = es.iterator();
             HashMap map = new HashMap();
 
-            while(true) {
-                while(it.hasNext()) {
-                    Element e = (Element)it.next();
+            while (true) {
+                while (it.hasNext()) {
+                    Element e = (Element) it.next();
                     if (e instanceof TextElement) {
                         it.remove();
                     } else {
-                        XmlElement el = (XmlElement)e;
+                        XmlElement el = (XmlElement) e;
                         List<Attribute> as = el.getAttributes();
                         if (!as.isEmpty()) {
                             String col = null;
                             Iterator i$ = as.iterator();
 
-                            while(i$.hasNext()) {
-                                Attribute a = (Attribute)i$.next();
+                            while (i$.hasNext()) {
+                                Attribute a = (Attribute) i$.next();
                                 if (a.getName().equalsIgnoreCase("column")) {
                                     col = a.getValue();
                                     break;
@@ -132,8 +163,8 @@ public class CommentPlugin extends PluginAdapter {
                 Set<Element> set = map.keySet();
                 Iterator i$ = set.iterator();
 
-                while(i$.hasNext()) {
-                    Element e = (Element)i$.next();
+                while (i$.hasNext()) {
+                    Element e = (Element) i$.next();
                     int id = es.indexOf(e);
                     es.add(id, (Element) map.get(e));
                     es.add(id, new TextElement(""));
@@ -179,8 +210,8 @@ public class CommentPlugin extends PluginAdapter {
                     return;
                 }
 
-                attr = (Attribute)it.next();
-            } while(!attr.getName().equalsIgnoreCase(name));
+                attr = (Attribute) it.next();
+            } while (!attr.getName().equalsIgnoreCase(name));
 
             it.remove();
         }
@@ -188,8 +219,8 @@ public class CommentPlugin extends PluginAdapter {
 
     public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
         document.getRootElement().addElement(new TextElement(""));
-        document.getRootElement().addElement(new TextElement("<!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()) + " ### -->\n\n\n"));
-        document.getRootElement().addElement(new TextElement("<!-- Your codes goes here!!! -->"));
+        // document.getRootElement().addElement(new TextElement("<!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()) + " ### -->\n\n\n"));
+        document.getRootElement().addElement(new TextElement("<!-- 上面是自动生成的,新代码可以放下面 -->"));
         document.getRootElement().addElement(new TextElement(""));
         return true;
     }

@@ -10,13 +10,9 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
 import java.util.List;
 
 /**
- *
- *  @Author: GuiRunning 郭贵荣
- *
- *  @Description: 整合Lombok
- *
- *  @Date: 2018/7/14 1:52
- *
+ * @Author: GuiRunning 郭贵荣
+ * @Description: 整合Lombok
+ * @Date: 2018/7/14 1:52
  */
 public class LombokPlugin extends PluginAdapter {
 
@@ -119,8 +115,16 @@ public class LombokPlugin extends PluginAdapter {
      * @param topLevelClass
      */
     protected void addDataAnnotation(TopLevelClass topLevelClass) {
-        topLevelClass.addImportedType(dataAnnotation);
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.AllArgsConstructor"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.Builder"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.Data"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.NoArgsConstructor"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.experimental.Accessors"));
         topLevelClass.addAnnotation("@Data");
+        topLevelClass.addAnnotation("@Builder");
+        topLevelClass.addAnnotation("@NoArgsConstructor");
+        topLevelClass.addAnnotation("@AllArgsConstructor");
+        topLevelClass.addAnnotation("@Accessors(chain = true)");
     }
 
 }
