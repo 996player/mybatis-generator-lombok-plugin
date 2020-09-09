@@ -33,6 +33,13 @@ public class CommentPlugin extends PluginAdapter {
         return true;
     }
 
+    /**
+     * model类的
+     * 
+     * @param topLevelClass
+     * @param introspectedTable
+     * @return
+     */
     public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         topLevelClass.getJavaDocLines().clear();
         topLevelClass.addJavaDocLine("/**");
@@ -45,7 +52,7 @@ public class CommentPlugin extends PluginAdapter {
     }
 
     /**
-     * 这个是mapper文件的
+     * 这个是mapper.java文件的
      *
      * @param topLevelClass
      * @param introspectedTable
@@ -217,6 +224,12 @@ public class CommentPlugin extends PluginAdapter {
         }
     }
 
+    /**
+     * mapper.xml里面的
+     * @param document
+     * @param introspectedTable
+     * @return
+     */
     public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
         document.getRootElement().addElement(new TextElement(""));
         // document.getRootElement().addElement(new TextElement("<!-- ### 以上代码由MBG + CommentPlugin自动生成, 生成时间: " + (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).format(new Date()) + " ### -->\n\n\n"));
